@@ -3,28 +3,30 @@ import { useState, createContext } from "react";
 const Context = createContext({});
 
 export const CartContext = ({ children }) => {
-  const [items, setItems] = useState([
-    { book: { title: "Libro 1" }, quantity: 10 },
-  ]);
+  const [items, setItems] = useState([]);
 
+  const clearItems = () => {
+    setItems([]);
+    window.location.href = "/";
+  };
   const addToCart = (book, quantity) => {
-    let exists = false;
-    items.forEach((el) => {
-      if (el.book.title === book.title) exists = true;
-    });
-    if (!exists) setItems((prev) => [...prev, { book, quantity }]);
-    else {
-      setItems((prev) =>
-        prev.map((el) =>
-          el.book.title === book.title
-            ? { book, quantity: el.quantity + quantity }
-            : el
-        )
-      );
+    const Book = items.find((el) => el.book.title === book.title);
+
+    if (!Book) {
+      book.stock > quantity
+        ? setItems((prev) => [...prev, { book, quantity }])
+        : console.log("There is no such as you want on stock");
+    } else {
+      console.log(Book.book.stock);
+      Book.book.stock > Book.quantity + quantity
+        ? changeQuantity(book, Book.quantity + quantity)
+        : console.log("There is no such as you want on stock");
     }
   };
 
   const changeQuantity = (book, quantity) => {
+    if (quantity > book.stock)
+      throw new Error("book quantity is not available");
     setItems((prev) =>
       prev.map((el) => (el.book.title === book.title ? { book, quantity } : el))
     );
@@ -36,7 +38,14 @@ export const CartContext = ({ children }) => {
 
   return (
     <Context.Provider
-      value={{ items, setItems, addToCart, removeFromCart, changeQuantity }}
+      value={{
+        items,
+        setItems,
+        addToCart,
+        removeFromCart,
+        changeQuantity,
+        clearItems,
+      }}
     >
       {children}
     </Context.Provider>

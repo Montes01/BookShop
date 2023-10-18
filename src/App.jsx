@@ -8,9 +8,9 @@ function App() {
   const { items } = useContext(Context);
   return (
     <div className="bg-slate-950 text-white">
-      <span className=" absolute top-2 right-2 text-white font-bold text-xl bg-slate-800 p-2 rounded-xl object-center object-cover z-10">
+      <span className=" fixed top-2 right-2 text-white font-bold text-xl bg-slate-800 p-2 rounded-xl object-center object-cover z-10">
         {items.length}
-      </span>
+      </span> y
 
       <Routes>
         <Route path="/" Component={BookList} />
